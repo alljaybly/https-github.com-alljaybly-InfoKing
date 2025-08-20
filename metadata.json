@@ -1,0 +1,5 @@
+{
+  "name": "InfoKing: Billion-User Ideas",
+  "description": "An AI-powered web app that scrapes public web data for user problems and generates potential billion-user app ideas. Features a gamified UI, sorting, and offline support.",
+  "requestFramePermissions": []
+}
