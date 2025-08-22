@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { AppIdea } from '../types';
-import { LightbulbIcon, ImageIcon, PresentationIcon, CodeBracketIcon, LinkIcon } from './icons';
+import { LightbulbIcon, ImageIcon, PresentationIcon, CodeIcon, LinkIcon, RedditIcon, XIcon, YouTubeIcon, TikTokIcon } from './icons';
+
+type GuidanceStep = 'scrape' | 'mockup' | 'build' | 'pitch' | 'done';
 
 interface IdeaCardProps {
   idea: AppIdea;
@@ -10,7 +12,8 @@ interface IdeaCardProps {
   onGenerateMockup: (idea: AppIdea) => void;
   onGeneratePitchDeck: (idea: AppIdea) => void;
   onBuildApp: (idea: AppIdea) => void;
-  isNextStep: boolean;
+  showGuidance: boolean;
+  guidanceStep: GuidanceStep;
 }
 
 const ProgressBar: React.FC<{ score: number }> = ({ score }) => {
@@ -30,14 +33,28 @@ const ProgressBar: React.FC<{ score: number }> = ({ score }) => {
   );
 };
 
+const PlatformIcon: React.FC<{ platform: string }> = ({ platform }) => {
+  const lowerPlatform = platform.toLowerCase();
+  if (lowerPlatform.includes('reddit')) return <RedditIcon className="text-red-500" />;
+  if (lowerPlatform.includes('x') || lowerPlatform.includes('twitter')) return <XIcon className="dark:text-white text-black" />;
+  if (lowerPlatform.includes('youtube')) return <YouTubeIcon className="text-red-600" />;
+  if (lowerPlatform.includes('tiktok')) return <TikTokIcon className="dark:text-white text-black" />;
+  return <LinkIcon />;
+};
 
-const IdeaCard: React.FC<IdeaCardProps> = ({ idea, index, onBrainstorm, onGenerateMockup, onGeneratePitchDeck, onBuildApp, isNextStep }) => {
+const IdeaCard: React.FC<IdeaCardProps> = ({ idea, index, onBrainstorm, onGenerateMockup, onGeneratePitchDeck, onBuildApp, showGuidance, guidanceStep }) => {
   const categoryColors: { [key: string]: string } = {
     Health: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
     Productivity: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     Finance: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
     Other: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
   };
+
+  const getHighlightClass = (step: 'mockup' | 'build' | 'pitch') => {
+      return showGuidance && guidanceStep === step
+          ? 'ring-4 ring-cyan-400 ring-offset-2 ring-offset-white dark:ring-offset-gray-800 animate-pulse'
+          : '';
+  }
 
   return (
     <div 
@@ -57,6 +74,21 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, index, onBrainstorm, onGenera
         <p className="text-brand-cyan dark:text-brand-green font-semibold mb-6">{idea.solution}</p>
       </div>
       
+       {idea.source && idea.source.url && (
+          <div className="mb-4">
+              <a 
+                  href={idea.source.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
+                  title={`Source: ${idea.source.url}`}
+              >
+                  <PlatformIcon platform={idea.source.platform} />
+                  <span>Source: {idea.source.platform}</span>
+              </a>
+          </div>
+      )}
+
       <div className="space-y-4">
         <div className="space-y-2">
             <div className="flex justify-between items-center">
@@ -65,55 +97,36 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, index, onBrainstorm, onGenera
             </div>
             <ProgressBar score={idea.marketSizeScore} />
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-row flex-wrap gap-2">
             <button 
                 onClick={() => onBrainstorm(idea)}
-                className={`relative flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/70 dark:hover:bg-gray-600/70 transition-colors text-gray-700 dark:text-gray-200 font-semibold text-sm ${isNextStep ? 'animate-pulse-bright' : ''}`}
-                title="Brainstorm with AI"
+                className="flex-grow flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/70 dark:hover:bg-gray-600/70 transition-colors text-gray-700 dark:text-gray-200 font-semibold text-sm min-w-[120px]"
             >
                 <LightbulbIcon size={16} />
                 <span>Brainstorm</span>
-                {isNextStep && <span className="absolute -top-1 -right-1 px-2 py-0.5 bg-cyan-500 text-white text-xs font-bold rounded-full">Next Step</span>}
             </button>
             <button 
                 onClick={() => onGenerateMockup(idea)}
-                className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/70 dark:hover:bg-gray-600/70 transition-colors text-gray-700 dark:text-gray-200 font-semibold text-sm"
-                title="Generate UI Mockup"
+                className={`flex-grow flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/70 dark:hover:bg-gray-600/70 transition-all text-gray-700 dark:text-gray-200 font-semibold text-sm min-w-[120px] ${getHighlightClass('mockup')}`}
             >
                 <ImageIcon size={16} />
                 <span>Mockup</span>
             </button>
-            <button 
+             <button 
                 onClick={() => onGeneratePitchDeck(idea)}
-                className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/20 dark:bg-cyan-500/30 hover:bg-cyan-500/40 dark:hover:bg-cyan-500/50 transition-colors text-cyan-800 dark:text-cyan-200 font-semibold text-sm"
-                title="Generate Pitch Deck"
+                className={`flex-grow flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/20 dark:bg-cyan-500/30 hover:bg-cyan-500/40 dark:hover:bg-cyan-500/50 transition-all text-cyan-700 dark:text-cyan-200 font-semibold text-sm min-w-[120px] ${getHighlightClass('pitch')}`}
             >
                 <PresentationIcon size={16} />
                 <span>Pitch Deck</span>
             </button>
              <button 
                 onClick={() => onBuildApp(idea)}
-                className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-purple-500/20 dark:bg-purple-500/30 hover:bg-purple-500/40 dark:hover:bg-purple-500/50 transition-colors text-purple-800 dark:text-purple-200 font-semibold text-sm"
-                title="Build App with AI"
+                className={`flex-grow flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-purple-500/20 dark:bg-purple-500/30 hover:bg-purple-500/40 dark:hover:bg-purple-500/50 transition-all text-purple-700 dark:text-purple-200 font-semibold text-sm min-w-[120px] ${getHighlightClass('build')}`}
             >
-                <CodeBracketIcon size={16} />
+                <CodeIcon size={16} />
                 <span>Build App</span>
             </button>
         </div>
-         {idea.source?.url && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700/50">
-                <a 
-                    href={idea.source.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
-                    title={`Source: ${idea.source.url}`}
-                >
-                <LinkIcon size={14} />
-                <span>Source: <strong>{idea.source.platform}</strong></span>
-                </a>
-            </div>
-        )}
       </div>
     </div>
   );

@@ -1,17 +1,13 @@
-import { User } from '@supabase/supabase-js';
-
-export type { User };
 
 export interface AppIdea {
   id: string;
-  user_id?: string;
   problem: string;
   solution: string;
   category: 'Health' | 'Productivity' | 'Finance' | 'Other';
   marketSizeScore: number; // A score from 0 to 100
   source?: {
-    url: string;
     platform: string;
+    url: string;
   };
 }
 
@@ -30,11 +26,19 @@ export enum SortOption {
   MARKET_SIZE_ASC = 'Market Size (Low to High)',
 }
 
-export interface ForumPost {
-  id: number;
-  created_at: string;
+export interface PitchDeckSlideContent {
+  slide: number;
+  title: string;
   content: string;
-  user_email: string;
-  idea_solution?: string;
-  idea_problem?: string;
+  imagePrompt: string;
+}
+
+export interface PitchDeckSlide extends PitchDeckSlideContent {
+  imageUrl: string;
+}
+
+export enum BuilderOption {
+  STARTER_CODE = 'React Starter Code',
+  AI_STUDIO = 'Google AI Studio Prompt',
+  REPLIT = 'Replit Project Prompt',
 }

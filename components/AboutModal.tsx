@@ -17,17 +17,11 @@ const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
           <section>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">How to Use It</h3>
             <ol className="list-decimal list-inside space-y-2">
-              <li><strong>Sign In:</strong> Create an account or sign in to save all your generated ideas and participate in the community.</li>
-              <li><strong>Select Sources:</strong> Choose which platforms (like Reddit, Instagram, or LinkedIn) you want the AI to search for problems.</li>
-              <li><strong>Find Ideas:</strong> Click "Find New Ideas" for general concepts, or "Explore Teen Ideas" for concepts focused on youth challenges. The app will guide you to the next step!</li>
-              <li><strong>Brainstorm & Validate:</strong> Use the "Brainstorm" button on any idea card. Our AI analyst will perform a deep-dive SWOT analysis to help you validate its potential.</li>
-              <li><strong>Visualize with Mockups:</strong> Click "Mockup" to get an instant AI-generated wireframe of the app, helping you visualize the UI.</li>
-              <li><strong>Create a Pitch Deck:</strong> Click "Pitch Deck" to have the AI generate a 5-slide visual presentation for your idea.</li>
-              <li><strong>Build Your App:</strong> Click "Build App" to generate a detailed prompt. Copy this prompt into an AI tool like Google AI Studio to generate full-stack code for your application.</li>
-              <li><strong>Discuss in the Forum:</strong> Head to the "Forum" tab to discuss your ideas with other creators, share your progress, and get feedback.</li>
-              <li><strong>Review Your History:</strong> Your saved ideas are always available in the "History" tab. Use the "Menu" to sort them by market size.</li>
-              <li><strong>Showcase Your Work:</strong> Visit the "Apps" section to see what others have built and upload your own completed projects.</li>
-              <li><strong>Support Us:</strong> If you find InfoKing valuable, consider using the "Donate" button to support its development!</li>
+              <li><strong>Find Ideas:</strong> Click the big "Find New Ideas" button on the home screen. The AI will search the web in real-time and present you with fresh, unique app concepts.</li>
+              <li><strong>Brainstorm & Validate:</strong> On any idea card, click "Brainstorm with AI". Our AI analyst will perform a deep-dive SWOT analysis to help you validate the idea's potential.</li>
+              <li><strong>Review & Sort:</strong> Your discovered ideas are saved automatically. You can view them on the home screen or in the "History" section. Use the "Menu" to sort ideas by market size potential.</li>
+              <li><strong>Explore Apps:</strong> Visit the "Apps" section to see what others have built. Once you've created your own app from an idea, use the "Upload Your App" button to showcase it!</li>
+               <li><strong>Explore Platforms:</strong> Use the "Platforms" dropdown in the header to jump directly to popular social media sites and see what people are talking about right now.</li>
             </ol>
           </section>
            <p className="pt-4 font-semibold text-center text-brand-cyan dark:text-brand-green">Happy building, and may you find your billion-user idea!</p>
