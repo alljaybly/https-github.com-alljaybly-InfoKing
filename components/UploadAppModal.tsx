@@ -1,5 +1,5 @@
 
-import React, 'react';
+import React from 'react';
 import { ShowcaseApp } from '../types';
 
 interface UploadAppModalProps {

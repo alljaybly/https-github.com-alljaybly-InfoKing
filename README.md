@@ -55,19 +55,14 @@ To run this project, you need a local development environment that can handle Re
 ### Prerequisites
 
 -   A modern web browser.
--   A local web server (like the `Live Server` extension for VS Code, or a project setup with Vite/Create React App).
+-   A local web server (e.g., the `Live Server` extension for VS Code).
 -   A Google Gemini API key. You can get one from [Google AI Studio](https://aistudio.google.com/).
 
 ### Setup
 
 1.  **Download the project files.**
 
-2.  **Set up the API Key:** The application is configured to use an environment variable for the Google Gemini API key. How you set this depends on your development setup:
-    -   If using **Vite**, create a `.env` file in the project root and add:
-        ```
-        VITE_GEMINI_KEY=YOUR_API_KEY_HERE
-        ```
-    -   If using another tool, ensure the variable `import.meta.env.VITE_GEMINI_KEY` is correctly populated with your API key. The file `src/services/geminiService.ts` expects this variable.
+2.  **Set up the API Key:** The application requires your Google Gemini API key to be available as an environment variable named `API_KEY`. The code accesses this key via `process.env.API_KEY`. You must configure this variable in the environment where you deploy or run the application. The app will not function without it.
 
 3.  **Serve the `index.html` file** from your local web server. The app should load and be ready to use.
 
