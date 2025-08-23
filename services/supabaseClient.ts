@@ -1,5 +1,4 @@
-
-import { AppIdea, ShowcaseApp } from '../types';
+import { AppIdea, ShowcaseApp, ForumPost } from '../types';
 
 // --- HACKATHON NOTE: MOCK SUPABASE CLIENT ---
 // This is a mock client that uses browser localStorage to simulate
@@ -8,6 +7,7 @@ import { AppIdea, ShowcaseApp } from '../types';
 
 const IDEAS_STORAGE_KEY = 'infoKingIdeas';
 const SHOWCASE_APPS_STORAGE_KEY = 'infoKingShowcaseApps';
+const FORUM_POSTS_STORAGE_KEY = 'infoKingForumPosts';
 
 /**
  * --- HOW TO INTEGRATE REAL SUPABASE ---
@@ -34,7 +34,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Mock implementation for App Ideas
 export const getIdeas = async (): Promise<AppIdea[]> => {
-  console.log("Mock Supabase: Fetching ideas from localStorage.");
   try {
     const storedIdeas = localStorage.getItem(IDEAS_STORAGE_KEY);
     return storedIdeas ? JSON.parse(storedIdeas) : [];
@@ -59,7 +58,6 @@ export const addIdeas = async (newIdeas: AppIdea[]): Promise<AppIdea[]> => {
 
 // Mock implementation for Showcase Apps
 export const getShowcaseApps = async (): Promise<ShowcaseApp[]> => {
-  console.log("Mock Supabase: Fetching showcase apps from localStorage.");
   try {
     const storedApps = localStorage.getItem(SHOWCASE_APPS_STORAGE_KEY);
     // Add some default apps if storage is empty for demonstration
@@ -85,4 +83,63 @@ export const addShowcaseApp = async (newApp: ShowcaseApp): Promise<ShowcaseApp[]
     const allApps = [newApp, ...existingApps];
     localStorage.setItem(SHOWCASE_APPS_STORAGE_KEY, JSON.stringify(allApps));
     return allApps;
+};
+
+// Mock implementation for Forum Posts
+export const getForumPosts = async (): Promise<ForumPost[]> => {
+  try {
+    const storedPosts = localStorage.getItem(FORUM_POSTS_STORAGE_KEY);
+    if (!storedPosts) {
+      // Add default posts if storage is empty
+      const defaultPosts: ForumPost[] = [
+        {
+          id: 'post-1',
+          createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+          author: 'Founder123',
+          content: 'Just had an idea for an app that uses AI to create personalized bedtime stories for kids. What do you all think?',
+          parentId: null,
+        },
+        {
+          id: 'post-2',
+          createdAt: new Date(Date.now() - 86000000).toISOString(),
+          author: 'CreativeCoder',
+          content: 'That sounds amazing! You could even let parents add names and favorite things to customize it further.',
+          parentId: 'post-1',
+        },
+        {
+          id: 'post-3',
+          createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+          author: 'ProductivityPro',
+          content: 'I used the AI to generate this idea for a time-blocking app that syncs with your energy levels. Check it out!',
+          idea: {
+            id: 'idea-mock-1',
+            problem: 'Users struggle to plan their day according to their natural energy cycles.',
+            solution: 'An AI-powered calendar that suggests tasks based on your peak productivity times.',
+            category: 'Productivity',
+            marketSizeScore: 85,
+          },
+          parentId: null,
+        },
+      ];
+      localStorage.setItem(FORUM_POSTS_STORAGE_KEY, JSON.stringify(defaultPosts));
+      return defaultPosts;
+    }
+    return JSON.parse(storedPosts);
+  } catch (error) {
+    console.error("Failed to parse forum posts from localStorage", error);
+    return [];
+  }
+};
+
+export const addForumPost = async (newPost: Omit<ForumPost, 'id' | 'createdAt'>): Promise<ForumPost[]> => {
+    console.log("Mock Supabase: Saving new forum post to localStorage.");
+    const existingPosts = await getForumPosts();
+    const postWithId: ForumPost = {
+        ...newPost,
+        id: self.crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+    };
+    const allPosts = [postWithId, ...existingPosts];
+    localStorage.setItem(FORUM_POSTS_STORAGE_KEY, JSON.stringify(allPosts));
+    return allPosts;
 };

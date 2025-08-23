@@ -2,17 +2,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AppIdea, PitchDeckSlideContent } from '../types';
 
-// Note: Your API key must be available as an environment variable `process.env.API_KEY`
-// Do not hardcode the API key in the code.
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  // In a real app, you might have better error handling,
-  // but for this hackathon, we'll alert the user.
-  console.error("API_KEY environment variable not set.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// The API key is injected from the environment.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const cleanJsonString = (str: string): string => {
   // Gemini might wrap the JSON in ```json ... ```, so we strip it.
@@ -21,15 +12,19 @@ const cleanJsonString = (str: string): string => {
 };
 
 
-export const fetchNewIdeas = async (customTopic?: string): Promise<AppIdea[]> => {
+export const fetchNewIdeas = async (customTopic?: string, platforms: string[] = []): Promise<AppIdea[]> => {
   const model = "gemini-2.5-flash";
   
+  const platformText = platforms.length > 0
+    ? `sources like ${platforms.join(', ')}`
+    : 'sources like Reddit, X (formerly Twitter), TikTok, and YouTube';
+
   const coreInstruction = customTopic
-    ? `Based on your real-time web search of sources like Reddit, X (formerly Twitter), TikTok, and YouTube, provide 3 new, innovative app ideas addressing problems faced by ${customTopic}.`
-    : `Based on your real-time web search, provide 3 new, innovative app ideas. Focus on problems in the health, productivity, or finance sectors.`;
+    ? `Based on your real-time web search of ${platformText}, provide 3 new, innovative app ideas addressing problems faced by ${customTopic}.`
+    : `Based on your real-time web search of ${platformText}, provide 3 new, innovative app ideas. Focus on problems in the health, productivity, or finance sectors.`;
 
   const prompt = `
-    You are an expert market researcher and tech analyst. Your goal is to identify genuine user problems from public web sources like Reddit, X (formerly Twitter), and tech forums. For each problem, brainstorm a potential app solution.
+    You are an expert market researcher and tech analyst. Your goal is to identify genuine user problems from public web data. For each problem, brainstorm a potential app solution.
 
     ${coreInstruction}
 
@@ -42,7 +37,7 @@ export const fetchNewIdeas = async (customTopic?: string): Promise<AppIdea[]> =>
       "category": "Either 'Health', 'Productivity', 'Finance', or 'Other'.",
       "marketSizeScore": "A number between 0 and 100 representing the potential market size, where 100 is a billion-user potential.",
       "source": {
-        "platform": "The platform where the problem was found (e.g., 'Reddit', 'X', 'YouTube'). The name should be short and capitalized.",
+        "platform": "The platform where the problem was found (e.g., 'Reddit', 'X', 'Instagram', 'LinkedIn', 'YouTube'). The name should be short and capitalized.",
         "url": "A direct and valid URL to the thread, post, or video where the problem was discussed."
       }
     }

@@ -42,3 +42,13 @@ export enum BuilderOption {
   AI_STUDIO = 'Google AI Studio Prompt',
   REPLIT = 'Replit Project Prompt',
 }
+
+export interface ForumPost {
+  id: string;
+  createdAt: string; // ISO string
+  author: string;
+  content: string; // The user's message
+  idea?: AppIdea; // Optional AppIdea attached to the post
+  parentId: string | null; // For threading
+  replies?: ForumPost[]; // Populated in the client
+}

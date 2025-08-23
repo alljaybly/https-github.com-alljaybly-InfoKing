@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { AppIdea, SortOption, ShowcaseApp, PitchDeckSlide, BuilderOption } from './types';
 import { fetchNewIdeas, brainstormIdea, generateAppMockup, generatePitchDeckContent, generateSlideImage } from './services/geminiService';
@@ -13,7 +12,9 @@ import PitchDeckModal from './components/PitchDeckModal';
 import AppBuilderModal from './components/AppBuilderModal';
 import MosaicGrid from './components/MosaicGrid';
 import GuidancePanel from './components/GuidancePanel';
-import { SunIcon, MoonIcon, SparklesIcon, LoaderIcon, ClockIcon, ArrowLeftIcon, ChevronDownIcon, AppWindowIcon, UploadCloudIcon, InfoIcon, GlobeIcon, LightbulbIcon, MicrophoneIcon, ImageIcon, DownloadIcon, PresentationIcon, CodeIcon } from './components/icons';
+import ForumView from './components/ForumView';
+import DonationModal from './components/DonationModal';
+import { SunIcon, MoonIcon, SparklesIcon, LoaderIcon, ClockIcon, ArrowLeftIcon, ChevronDownIcon, AppWindowIcon, UploadCloudIcon, InfoIcon, GlobeIcon, LightbulbIcon, MicrophoneIcon, ImageIcon, DownloadIcon, PresentationIcon, CodeIcon, RefreshCwIcon, UsersIcon, HeartIcon, RedditIcon, XIcon, YouTubeIcon, TikTokIcon, InstagramIcon, LinkedInIcon } from './components/icons';
 import Confetti from './components/Confetti';
 
 // Extend the Window interface for SpeechRecognition
@@ -76,6 +77,8 @@ const PlatformMenu: React.FC<{ closeMenu: () => void; }> = ({ closeMenu }) => {
     { name: 'Reddit', url: 'https://www.reddit.com' },
     { name: 'TikTok', url: 'https://www.tiktok.com' },
     { name: 'Facebook', url: 'https://www.facebook.com' },
+    { name: 'Instagram', url: 'https://www.instagram.com' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com' },
   ];
   return (
     <div className="absolute top-full mt-2 w-56 rounded-lg shadow-lg bg-white/50 dark:bg-gray-800/80 backdrop-blur-md ring-1 ring-black ring-opacity-5 z-50 animate-fade-in">
@@ -103,10 +106,13 @@ const Header: React.FC<{
   toggleDarkMode: () => void;
   onShowHistory: () => void;
   onShowApps: () => void;
+  onShowForum: () => void;
   onShowAbout: () => void;
+  onGoHome: () => void;
+  onRefresh: () => void;
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
-}> = ({ isDarkMode, toggleDarkMode, onShowHistory, onShowApps, onShowAbout, sortOption, setSortOption }) => {
+}> = ({ isDarkMode, toggleDarkMode, onShowHistory, onShowApps, onShowForum, onShowAbout, onGoHome, onRefresh, sortOption, setSortOption }) => {
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
   const [isPlatformMenuOpen, setIsPlatformMenuOpen] = useState(false);
   const sortMenuRef = useRef<HTMLDivElement>(null);
@@ -150,18 +156,29 @@ const Header: React.FC<{
            <button onClick={onShowApps} className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white font-semibold">
             Apps <AppWindowIcon />
           </button>
+          <button onClick={onShowForum} className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white font-semibold">
+            Forum <UsersIcon />
+          </button>
           <button onClick={onShowAbout} className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white font-semibold">
             About <InfoIcon />
           </button>
         </div>
 
         <div className="flex-1 flex justify-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white">
+            <h1 onClick={onGoHome} className="cursor-pointer text-4xl md:text-6xl font-extrabold text-white">
                 Info<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-green-300">King</span> 👑
             </h1>
         </div>
 
-        <div className="flex-1 flex justify-end">
+        <div className="flex-1 flex justify-end items-center gap-2">
+            <button
+                onClick={onRefresh}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white"
+                aria-label="Clear ideas and return home"
+                title="Clear ideas and return home"
+            >
+                <RefreshCwIcon />
+            </button>
             <button onClick={toggleDarkMode} className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white" aria-label="Toggle dark mode">
                 {isDarkMode ? <SunIcon /> : <MoonIcon />}
             </button>
@@ -172,9 +189,58 @@ const Header: React.FC<{
   );
 };
 
+const platformOptions = [
+    { name: 'Reddit', icon: RedditIcon, color: 'text-red-500' },
+    { name: 'X', icon: XIcon, color: 'dark:text-white text-black' },
+    { name: 'YouTube', icon: YouTubeIcon, color: 'text-red-600' },
+    { name: 'TikTok', icon: TikTokIcon, color: 'dark:text-white text-black' },
+    { name: 'Instagram', icon: InstagramIcon, color: 'text-pink-500' },
+    { name: 'LinkedIn', icon: LinkedInIcon, color: 'text-blue-600' },
+];
 
-const Footer: React.FC = () => (
+const PlatformSelector: React.FC<{
+  selectedPlatforms: string[];
+  onPlatformToggle: (platform: string) => void;
+}> = ({ selectedPlatforms, onPlatformToggle }) => {
+  return (
+    <div className="mb-8">
+      <p className="text-center text-white font-semibold mb-3">Select platforms to scrape:</p>
+      <div className="flex justify-center items-center flex-wrap gap-3">
+        {platformOptions.map(platform => {
+          const isSelected = selectedPlatforms.includes(platform.name);
+          return (
+            <button
+              key={platform.name}
+              onClick={() => onPlatformToggle(platform.name)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 transform hover:scale-105
+                ${isSelected 
+                  ? 'bg-green-500 text-white shadow-lg' 
+                  : 'bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 hover:bg-white'
+                }`
+              }
+              aria-pressed={isSelected}
+            >
+              <platform.icon size={16} className={!isSelected ? platform.color : ''} />
+              <span>{platform.name}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+
+const Footer: React.FC<{ onOpenDonationModal: () => void; }> = ({ onOpenDonationModal }) => (
   <footer className="text-center py-6 px-4 text-green-100/80 text-sm">
+    <div className="mb-4">
+      <button
+        onClick={onOpenDonationModal}
+        className="px-6 py-2 rounded-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold transition-colors transform hover:scale-105"
+      >
+        Donate
+      </button>
+    </div>
     <p>
       A production of Allen.J.Blythe(NXlevel)2025. Built with ❤️, Gemini, and React.
     </p>
@@ -199,9 +265,10 @@ const App: React.FC = () => {
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<SortOption>(SortOption.DEFAULT);
   const [isOnline, setIsOnline] = useState<boolean>(() => typeof navigator !== 'undefined' ? navigator.onLine : true);
-  const [currentView, setCurrentView] = useState<'home' | 'history' | 'apps'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'history' | 'apps' | 'forum'>('home');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
   // State for Brainstorm Bot
   const [isBrainstormModalOpen, setIsBrainstormModalOpen] = useState(false);
@@ -238,8 +305,10 @@ const App: React.FC = () => {
   const [showGuidance, setShowGuidance] = useState<boolean>(() => {
     return typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('guidanceDismissed') !== 'true' : true;
   });
-
-
+  
+  // State for Platform Selection
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['Reddit', 'X']);
+  
   const speak = useCallback((text: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -249,17 +318,23 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const handleFetchIdeas = useCallback(async (customTopic?: string) => {
+  const handleFetchIdeas = useCallback(async (customTopic?: string, platforms: string[] = []) => {
     if (!isOnline) {
       const message = "You are offline. Please connect to the internet to find new ideas.";
       setError(message);
       speak(message);
       return;
     }
+    if (platforms.length === 0) {
+        const message = "Please select at least one platform to scrape.";
+        setError(message);
+        speak(message);
+        return;
+    }
     setIsLoading(true);
     setError(null);
     try {
-      const newIdeas = await fetchNewIdeas(customTopic);
+      const newIdeas = await fetchNewIdeas(customTopic, platforms);
       const allIdeas = await addIdeas(newIdeas);
       setIdeas(allIdeas);
       setShowConfetti(true);
@@ -286,13 +361,13 @@ const App: React.FC = () => {
 
     if (match && match[1]) {
         const topic = match[1].trim();
-        await handleFetchIdeas(topic);
+        await handleFetchIdeas(topic, selectedPlatforms);
     } else if (commandLower.includes('find ideas') || commandLower.includes('get ideas')) {
-        await handleFetchIdeas();
+        await handleFetchIdeas(undefined, selectedPlatforms);
     } else {
         speak("I didn't understand that. Please say something like 'find health app ideas'.");
     }
-  }, [handleFetchIdeas, speak]);
+  }, [handleFetchIdeas, speak, selectedPlatforms]);
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -383,6 +458,13 @@ const App: React.FC = () => {
         setIsLoading(false);
     }
   }, []);
+  
+  const handleRefresh = () => {
+    // Per user request: "clear the page and take the user back to home screen"
+    setIdeas([]);
+    setCurrentView('home');
+    setError(null);
+  };
 
   useEffect(() => {
     loadInitialData();
@@ -534,6 +616,14 @@ const App: React.FC = () => {
     }
   };
 
+  const handlePlatformToggle = (platform: string) => {
+    setSelectedPlatforms(prev => 
+      prev.includes(platform) 
+        ? prev.filter(p => p !== platform) 
+        : [...prev, platform]
+    );
+  };
+
   const sortedIdeas = useMemo(() => {
     const sorted = [...ideas];
     switch (sortOption) {
@@ -547,10 +637,11 @@ const App: React.FC = () => {
   }, [ideas, sortOption]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-cyan-500 to-green-500 dark:from-cyan-900 dark:to-green-900 transition-colors duration-500">
+    <div className="h-full flex flex-col bg-gradient-to-br from-cyan-500 to-green-500 dark:from-cyan-900 dark:to-green-900 transition-colors duration-500 rounded-2xl overflow-hidden shadow-[0_0_35px_-5px_rgba(34,211,238,0.5)] dark:shadow-[0_0_35px_-5px_rgba(52,211,153,0.4)]">
       {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
       {isUploadModalOpen && <UploadAppModal onClose={() => setIsUploadModalOpen(false)} onSubmit={handleAppSubmit} />}
       {isAboutModalOpen && <AboutModal onClose={() => setIsAboutModalOpen(false)} />}
+      {isDonationModalOpen && <DonationModal onClose={() => setIsDonationModalOpen(false)} />}
       {isBrainstormModalOpen && (
         <BrainstormModal 
             idea={currentBrainstormIdea}
@@ -588,12 +679,15 @@ const App: React.FC = () => {
         toggleDarkMode={toggleDarkMode}
         onShowHistory={() => setCurrentView('history')}
         onShowApps={() => setCurrentView('apps')}
+        onShowForum={() => setCurrentView('forum')}
         onShowAbout={() => setIsAboutModalOpen(true)}
+        onGoHome={() => setCurrentView('home')}
+        onRefresh={handleRefresh}
         sortOption={sortOption}
         setSortOption={setSortOption}
       />
       
-      <main className="container mx-auto px-4 pb-12 flex-grow">
+      <main className="container mx-auto px-4 pb-12 flex-grow overflow-y-auto">
         {currentView === 'apps' && (
           <div className="animate-fade-in">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
@@ -629,6 +723,15 @@ const App: React.FC = () => {
             )}
           </div>
         )}
+
+        {currentView === 'forum' && (
+          <div className="animate-fade-in">
+            <ForumView
+              userIdeas={ideas}
+              onGoBack={() => setCurrentView('home')}
+            />
+          </div>
+        )}
         
         {currentView === 'history' && (
             <div className="animate-fade-in">
@@ -646,10 +749,11 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'home' && (
-          <div className="mb-8">
+          <>
+            <PlatformSelector selectedPlatforms={selectedPlatforms} onPlatformToggle={handlePlatformToggle} />
             <div className="flex justify-center items-center flex-wrap gap-4">
               <button
-                  onClick={() => handleFetchIdeas()}
+                  onClick={() => handleFetchIdeas(undefined, selectedPlatforms)}
                   disabled={isLoading || !isOnline}
                   className={`flex items-center justify-center gap-3 text-white font-bold text-lg px-8 py-4 rounded-full bg-gradient-to-r from-green-400 to-cyan-500 hover:from-green-500 hover:to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 ${showGuidance && guidanceStep === 'scrape' ? 'animate-pulse ring-4 ring-white/50' : ''}`}
               >
@@ -666,7 +770,7 @@ const App: React.FC = () => {
                   )}
               </button>
               <button
-                  onClick={() => handleFetchIdeas('teenagers and children')}
+                  onClick={() => handleFetchIdeas('teenagers and children', selectedPlatforms)}
                   disabled={isLoading || !isOnline}
                   className={`flex items-center justify-center gap-3 text-white font-bold text-lg px-8 py-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 ${showGuidance && guidanceStep === 'scrape' ? 'animate-pulse ring-4 ring-white/50' : ''}`}
               >
@@ -683,12 +787,12 @@ const App: React.FC = () => {
                   <span className="hidden sm:inline">Download Ideas</span>
                 </button>
             </div>
-          </div>
+          </>
         )}
         
         {(currentView === 'home' || currentView === 'history') && (
           sortedIdeas.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in mt-8">
               {sortedIdeas.map((idea, index) => (
                 <IdeaCard 
                     key={idea.id} 
@@ -707,7 +811,9 @@ const App: React.FC = () => {
             !isLoading && (
               <>
                 {currentView === 'home' ? (
-                  <MosaicGrid images={VIRAL_APP_IMAGES} />
+                  <div className="mt-8">
+                    <MosaicGrid images={VIRAL_APP_IMAGES} />
+                  </div>
                 ) : (
                   <div className="text-center py-16 animate-fade-in">
                     <h2 className="text-3xl font-bold text-white mb-2">Your History is Empty</h2>
@@ -735,7 +841,7 @@ const App: React.FC = () => {
               </div>
             )}
       </main>
-      <Footer />
+      <Footer onOpenDonationModal={() => setIsDonationModalOpen(true)} />
       {showGuidance && guidanceStep !== 'done' && ideas.length === 0 && (
         <GuidancePanel step="scrape" onDismiss={dismissGuidance} />
       )}
