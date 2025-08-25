@@ -302,6 +302,7 @@ export const LinkedInIcon: React.FC<IconProps> = ({ size = 16, className, ...pro
     <circle cx="4" cy="4" r="2"></circle>
   </svg>
 );
+<<<<<<< HEAD
 
 export const GoogleIcon: React.FC<IconProps> = ({ size = 24, className, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} {...props}>
@@ -326,3 +327,5 @@ export const LogOutIcon: React.FC<IconProps> = ({ size = 24, className, ...props
     <line x1="21" y1="12" x2="9" y2="12" />
   </svg>
 );
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1

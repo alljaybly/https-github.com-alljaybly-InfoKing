@@ -52,8 +52,11 @@ export interface ForumPost {
   parentId: string | null; // For threading
   replies?: ForumPost[]; // Populated in the client
 }
+<<<<<<< HEAD
 
 export interface User {
   id: string;
   email: string;
 }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1

@@ -1,6 +1,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
+<<<<<<< HEAD
 import { AppIdea, ForumPost, User } from '../types';
+=======
+import { AppIdea, ForumPost } from '../types';
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 import { getForumPosts, addForumPost } from '../services/supabaseClient';
 import { ArrowLeftIcon, LoaderIcon, UsersIcon } from './icons';
 import ForumPostCard from './ForumPostCard';
@@ -8,9 +12,13 @@ import PostModal from './PostModal';
 
 interface ForumViewProps {
   userIdeas: AppIdea[];
+<<<<<<< HEAD
   currentUser: User | null;
   onGoBack: () => void;
   onAuthRequest: () => void;
+=======
+  onGoBack: () => void;
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 }
 
 const buildThreads = (posts: ForumPost[]): ForumPost[] => {
@@ -38,7 +46,11 @@ const buildThreads = (posts: ForumPost[]): ForumPost[] => {
 };
 
 
+<<<<<<< HEAD
 const ForumView: React.FC<ForumViewProps> = ({ userIdeas, currentUser, onGoBack, onAuthRequest }) => {
+=======
+const ForumView: React.FC<ForumViewProps> = ({ userIdeas, onGoBack }) => {
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,6 +69,7 @@ const ForumView: React.FC<ForumViewProps> = ({ userIdeas, currentUser, onGoBack,
   }, [loadPosts]);
 
   const handlePostSubmit = async (content: string, ideaId?: string) => {
+<<<<<<< HEAD
     if (!currentUser) {
       onAuthRequest();
       return;
@@ -64,6 +77,11 @@ const ForumView: React.FC<ForumViewProps> = ({ userIdeas, currentUser, onGoBack,
     const attachedIdea = userIdeas.find(idea => idea.id === ideaId);
     const newPostData = {
       author: currentUser.email, // Use current user's email
+=======
+    const attachedIdea = userIdeas.find(idea => idea.id === ideaId);
+    const newPostData = {
+      author: 'You', // In a real app, this would be the logged-in user
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
       content,
       idea: attachedIdea,
       parentId: replyTo ? replyTo.id : null,
@@ -76,19 +94,25 @@ const ForumView: React.FC<ForumViewProps> = ({ userIdeas, currentUser, onGoBack,
   };
 
   const openReplyModal = (post: ForumPost) => {
+<<<<<<< HEAD
     if (!currentUser) {
       onAuthRequest();
       return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     setReplyTo(post);
     setIsModalOpen(true);
   };
   
   const openNewPostModal = () => {
+<<<<<<< HEAD
     if (!currentUser) {
       onAuthRequest();
       return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     setReplyTo(null);
     setIsModalOpen(true);
   }

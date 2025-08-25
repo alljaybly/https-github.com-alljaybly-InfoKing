@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+<<<<<<< HEAD
 import { AppIdea, SortOption, ShowcaseApp, PitchDeckSlide, User } from './types';
 import { fetchNewIdeas, brainstormIdea, generateAppMockup, generatePitchDeckContent, generateSlideImage } from './services/geminiService';
 import { getIdeas, addIdeas, getShowcaseApps, addShowcaseApp, getCurrentUser, signOut } from './services/supabaseClient';
+=======
+import { AppIdea, SortOption, ShowcaseApp, PitchDeckSlide, BuilderOption } from './types';
+import { fetchNewIdeas, brainstormIdea, generateAppMockup, generatePitchDeckContent, generateSlideImage } from './services/geminiService';
+import { getIdeas, addIdeas, getShowcaseApps, addShowcaseApp } from './services/supabaseClient';
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 import IdeaCard from './components/IdeaCard';
 import ShowcaseCard from './components/ShowcaseCard';
 import UploadAppModal from './components/UploadAppModal';
@@ -10,12 +16,19 @@ import BrainstormModal from './components/BrainstormModal';
 import MockupModal from './components/MockupModal';
 import PitchDeckModal from './components/PitchDeckModal';
 import AppBuilderModal from './components/AppBuilderModal';
+<<<<<<< HEAD
 import AuthModal from './components/AuthModal';
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 import MosaicGrid from './components/MosaicGrid';
 import GuidancePanel from './components/GuidancePanel';
 import ForumView from './components/ForumView';
 import DonationModal from './components/DonationModal';
+<<<<<<< HEAD
 import { SunIcon, MoonIcon, SparklesIcon, LoaderIcon, ClockIcon, ArrowLeftIcon, ChevronDownIcon, AppWindowIcon, UploadCloudIcon, InfoIcon, GlobeIcon, LightbulbIcon, MicrophoneIcon, ImageIcon, DownloadIcon, PresentationIcon, CodeIcon, RefreshCwIcon, UsersIcon, HeartIcon, RedditIcon, XIcon, YouTubeIcon, TikTokIcon, InstagramIcon, LinkedInIcon, LogOutIcon } from './components/icons';
+=======
+import { SunIcon, MoonIcon, SparklesIcon, LoaderIcon, ClockIcon, ArrowLeftIcon, ChevronDownIcon, AppWindowIcon, UploadCloudIcon, InfoIcon, GlobeIcon, LightbulbIcon, MicrophoneIcon, ImageIcon, DownloadIcon, PresentationIcon, CodeIcon, RefreshCwIcon, UsersIcon, HeartIcon, RedditIcon, XIcon, YouTubeIcon, TikTokIcon, InstagramIcon, LinkedInIcon } from './components/icons';
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 import Confetti from './components/Confetti';
 
 // Extend the Window interface for SpeechRecognition
@@ -113,10 +126,14 @@ const Header: React.FC<{
   onRefresh: () => void;
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
+<<<<<<< HEAD
   currentUser: User | null;
   onSignIn: () => void;
   onSignOut: () => void;
 }> = ({ isDarkMode, toggleDarkMode, onShowHistory, onShowApps, onShowForum, onShowAbout, onGoHome, onRefresh, sortOption, setSortOption, currentUser, onSignIn, onSignOut }) => {
+=======
+}> = ({ isDarkMode, toggleDarkMode, onShowHistory, onShowApps, onShowForum, onShowAbout, onGoHome, onRefresh, sortOption, setSortOption }) => {
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
   const [isPlatformMenuOpen, setIsPlatformMenuOpen] = useState(false);
   const sortMenuRef = useRef<HTMLDivElement>(null);
@@ -186,6 +203,7 @@ const Header: React.FC<{
             <button onClick={toggleDarkMode} className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white" aria-label="Toggle dark mode">
                 {isDarkMode ? <SunIcon /> : <MoonIcon />}
             </button>
+<<<<<<< HEAD
             {currentUser ? (
               <div className="relative group ml-2">
                   <button className="w-10 h-10 rounded-full bg-green-300 text-green-800 flex items-center justify-center font-bold text-lg uppercase">
@@ -207,6 +225,8 @@ const Header: React.FC<{
                     Sign In
                 </button>
             )}
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
         </div>
       </div>
       <p className="text-lg md:text-xl text-green-100 mt-2">Find your next billion-user app idea.</p>
@@ -295,10 +315,13 @@ const App: React.FC = () => {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
+<<<<<<< HEAD
   // Auth State
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
   // State for Brainstorm Bot
   const [isBrainstormModalOpen, setIsBrainstormModalOpen] = useState(false);
   const [currentBrainstormIdea, setCurrentBrainstormIdea] = useState<AppIdea | null>(null);
@@ -348,11 +371,14 @@ const App: React.FC = () => {
   }, []);
 
   const handleFetchIdeas = useCallback(async (customTopic?: string, platforms: string[] = []) => {
+<<<<<<< HEAD
     if (!currentUser) {
         setError("Please sign in to generate and save ideas.");
         setIsAuthModalOpen(true);
         return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     if (!isOnline) {
       const message = "You are offline. Please connect to the internet to find new ideas.";
       setError(message);
@@ -369,7 +395,11 @@ const App: React.FC = () => {
     setError(null);
     try {
       const newIdeas = await fetchNewIdeas(customTopic, platforms);
+<<<<<<< HEAD
       const allIdeas = await addIdeas(currentUser.id, newIdeas);
+=======
+      const allIdeas = await addIdeas(newIdeas);
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
       setIdeas(allIdeas);
       setShowConfetti(true);
       if (customTopic) {
@@ -387,7 +417,11 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+<<<<<<< HEAD
   }, [isOnline, speak, showGuidance, currentUser]);
+=======
+  }, [isOnline, speak, showGuidance]);
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
   
   const processVoiceCommand = useCallback(async (command: string) => {
     const commandLower = command.toLowerCase();
@@ -477,11 +511,19 @@ const App: React.FC = () => {
   
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
+<<<<<<< HEAD
   const loadInitialData = useCallback(async (userId?: string) => {
     setIsLoading(true);
     try {
         const [initialIdeas, initialApps] = await Promise.all([
             userId ? getIdeas(userId) : Promise.resolve([]),
+=======
+  const loadInitialData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+        const [initialIdeas, initialApps] = await Promise.all([
+            getIdeas(),
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
             getShowcaseApps()
         ]);
         setIdeas(initialIdeas);
@@ -494,14 +536,19 @@ const App: React.FC = () => {
   }, []);
   
   const handleRefresh = () => {
+<<<<<<< HEAD
     if (currentUser) {
         addIdeas(currentUser.id, []); // Clears user ideas
     }
+=======
+    // Per user request: "clear the page and take the user back to home screen"
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     setIdeas([]);
     setCurrentView('home');
     setError(null);
   };
 
+<<<<<<< HEAD
   // Check for existing user session on app load
   useEffect(() => {
     const user = getCurrentUser();
@@ -523,6 +570,11 @@ const App: React.FC = () => {
     setCurrentUser(null);
     setIdeas([]); // Clear ideas from state
   };
+=======
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
   
   const handleAppSubmit = async (appData: Omit<ShowcaseApp, 'id'>) => {
     const newApp: ShowcaseApp = {
@@ -535,10 +587,13 @@ const App: React.FC = () => {
   };
 
   const handleBrainstorm = async (idea: AppIdea) => {
+<<<<<<< HEAD
      if (!currentUser) {
         setIsAuthModalOpen(true);
         return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     if (!isOnline) {
       setError("You must be online to use the Brainstorm Bot.");
       return;
@@ -566,10 +621,13 @@ const App: React.FC = () => {
   };
 
   const handleGenerateMockup = async (idea: AppIdea) => {
+<<<<<<< HEAD
      if (!currentUser) {
         setIsAuthModalOpen(true);
         return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     if (!isOnline) {
       setError("You must be online to generate mockups.");
       return;
@@ -598,10 +656,13 @@ const App: React.FC = () => {
   };
   
   const handleGeneratePitchDeck = async (idea: AppIdea) => {
+<<<<<<< HEAD
      if (!currentUser) {
         setIsAuthModalOpen(true);
         return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     if (!isOnline) {
       setError("You must be online to generate a pitch deck.");
       return;
@@ -642,10 +703,13 @@ const App: React.FC = () => {
   };
 
   const handleBuildApp = (idea: AppIdea) => {
+<<<<<<< HEAD
      if (!currentUser) {
         setIsAuthModalOpen(true);
         return;
     }
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     setCurrentAppBuilderIdea(idea);
     setIsAppBuilderModalOpen(true);
     if (showGuidance) setGuidanceStep('pitch');
@@ -695,7 +759,10 @@ const App: React.FC = () => {
   };
 
   const sortedIdeas = useMemo(() => {
+<<<<<<< HEAD
     if (!currentUser) return [];
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     const sorted = [...ideas];
     switch (sortOption) {
       case SortOption.MARKET_SIZE_ASC:
@@ -705,12 +772,19 @@ const App: React.FC = () => {
       default:
         return sorted;
     }
+<<<<<<< HEAD
   }, [ideas, sortOption, currentUser]);
+=======
+  }, [ideas, sortOption]);
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-cyan-500 to-green-500 dark:from-cyan-900 dark:to-green-900 transition-colors duration-500 rounded-2xl overflow-hidden shadow-[0_0_35px_-5px_rgba(34,211,238,0.5)] dark:shadow-[0_0_35px_-5px_rgba(52,211,153,0.4)]">
       {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
+<<<<<<< HEAD
       {isAuthModalOpen && <AuthModal onClose={() => setIsAuthModalOpen(false)} onAuthSuccess={handleAuthSuccess} />}
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
       {isUploadModalOpen && <UploadAppModal onClose={() => setIsUploadModalOpen(false)} onSubmit={handleAppSubmit} />}
       {isAboutModalOpen && <AboutModal onClose={() => setIsAboutModalOpen(false)} />}
       {isDonationModalOpen && <DonationModal onClose={() => setIsDonationModalOpen(false)} />}
@@ -757,9 +831,12 @@ const App: React.FC = () => {
         onRefresh={handleRefresh}
         sortOption={sortOption}
         setSortOption={setSortOption}
+<<<<<<< HEAD
         currentUser={currentUser}
         onSignIn={() => setIsAuthModalOpen(true)}
         onSignOut={handleSignOut}
+=======
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
       />
       
       <main className="container mx-auto px-4 pb-12 flex-grow overflow-y-auto">
@@ -803,9 +880,13 @@ const App: React.FC = () => {
           <div className="animate-fade-in">
             <ForumView
               userIdeas={ideas}
+<<<<<<< HEAD
               currentUser={currentUser}
               onGoBack={() => setCurrentView('home')}
               onAuthRequest={() => setIsAuthModalOpen(true)}
+=======
+              onGoBack={() => setCurrentView('home')}
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
             />
           </div>
         )}
@@ -888,6 +969,7 @@ const App: React.FC = () => {
             !isLoading && (
               <>
                 {currentView === 'home' ? (
+<<<<<<< HEAD
                   !currentUser ? (
                     <div className="text-center py-16 animate-fade-in">
                       <h2 className="text-3xl font-bold text-white mb-2">Welcome to InfoKing!</h2>
@@ -901,6 +983,11 @@ const App: React.FC = () => {
                         <MosaicGrid images={VIRAL_APP_IMAGES} />
                      </div>
                   )
+=======
+                  <div className="mt-8">
+                    <MosaicGrid images={VIRAL_APP_IMAGES} />
+                  </div>
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
                 ) : (
                   <div className="text-center py-16 animate-fade-in">
                     <h2 className="text-3xl font-bold text-white mb-2">Your History is Empty</h2>
@@ -950,4 +1037,8 @@ const App: React.FC = () => {
   );
 };
 
+<<<<<<< HEAD
 export default App;
+=======
+export default App;
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1

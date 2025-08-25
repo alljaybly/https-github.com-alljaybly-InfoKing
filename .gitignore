@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+<<<<<<< HEAD
 node_modules/
 .env
 dist/
@@ -14,6 +15,12 @@ dist-ssr
 *.local
 client_secret_*.json
 *.apps.googleusercontent.com
+=======
+node_modules
+dist
+dist-ssr
+*.local
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 
 # Editor directories and files
 .vscode/*

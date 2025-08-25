@@ -1,14 +1,24 @@
+<<<<<<< HEAD
 import { AppIdea, ShowcaseApp, ForumPost, User } from '../types';
+=======
+import { AppIdea, ShowcaseApp, ForumPost } from '../types';
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 
 // --- HACKATHON NOTE: MOCK SUPABASE CLIENT ---
 // This is a mock client that uses browser localStorage to simulate
 // a database and provide offline capabilities. For a real deployment,
 // you would replace this with the actual Supabase client.
 
+<<<<<<< HEAD
 const IDEAS_STORAGE_KEY_PREFIX = 'infoKingIdeas_';
 const SHOWCASE_APPS_STORAGE_KEY = 'infoKingShowcaseApps';
 const FORUM_POSTS_STORAGE_KEY = 'infoKingForumPosts';
 const AUTH_STORAGE_KEY = 'infoKingUser';
+=======
+const IDEAS_STORAGE_KEY = 'infoKingIdeas';
+const SHOWCASE_APPS_STORAGE_KEY = 'infoKingShowcaseApps';
+const FORUM_POSTS_STORAGE_KEY = 'infoKingForumPosts';
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 
 /**
  * --- HOW TO INTEGRATE REAL SUPABASE ---
@@ -32,6 +42,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // For example, tables 'ideas' and 'showcase_apps'.
 */
 
+<<<<<<< HEAD
 // --- MOCK AUTHENTICATION ---
 
 export const getCurrentUser = (): User | null => {
@@ -77,6 +88,13 @@ export const getIdeas = async (userId: string): Promise<AppIdea[]> => {
   if (!userId) return [];
   try {
     const storedIdeas = localStorage.getItem(`${IDEAS_STORAGE_KEY_PREFIX}${userId}`);
+=======
+
+// Mock implementation for App Ideas
+export const getIdeas = async (): Promise<AppIdea[]> => {
+  try {
+    const storedIdeas = localStorage.getItem(IDEAS_STORAGE_KEY);
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
     return storedIdeas ? JSON.parse(storedIdeas) : [];
   } catch (error) {
     console.error("Failed to parse ideas from localStorage", error);
@@ -84,6 +102,7 @@ export const getIdeas = async (userId: string): Promise<AppIdea[]> => {
   }
 };
 
+<<<<<<< HEAD
 export const addIdeas = async (userId: string, newIdeas: AppIdea[]): Promise<AppIdea[]> => {
   if (!userId) throw new Error("User must be logged in to save ideas.");
   console.log(`Mock Supabase: Saving new ideas for user ${userId} to localStorage.`);
@@ -94,17 +113,30 @@ export const addIdeas = async (userId: string, newIdeas: AppIdea[]): Promise<App
   }
 
   const existingIdeas = await getIdeas(userId);
+=======
+export const addIdeas = async (newIdeas: AppIdea[]): Promise<AppIdea[]> => {
+  console.log("Mock Supabase: Saving new ideas to localStorage.");
+  const existingIdeas = await getIdeas();
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
   // Filter out any potential duplicates by problem statement
   const uniqueNewIdeas = newIdeas.filter(
     (newIdea) => !existingIdeas.some((existing) => existing.problem === newIdea.problem)
   );
 
   const allIdeas = [...uniqueNewIdeas, ...existingIdeas];
+<<<<<<< HEAD
   localStorage.setItem(`${IDEAS_STORAGE_KEY_PREFIX}${userId}`, JSON.stringify(allIdeas));
   return allIdeas;
 };
 
 // Mock implementation for Showcase Apps (Public)
+=======
+  localStorage.setItem(IDEAS_STORAGE_KEY, JSON.stringify(allIdeas));
+  return allIdeas;
+};
+
+// Mock implementation for Showcase Apps
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 export const getShowcaseApps = async (): Promise<ShowcaseApp[]> => {
   try {
     const storedApps = localStorage.getItem(SHOWCASE_APPS_STORAGE_KEY);
@@ -133,7 +165,11 @@ export const addShowcaseApp = async (newApp: ShowcaseApp): Promise<ShowcaseApp[]
     return allApps;
 };
 
+<<<<<<< HEAD
 // Mock implementation for Forum Posts (Public)
+=======
+// Mock implementation for Forum Posts
+>>>>>>> 21d4186a2169e8da0105808c966e48a3e9a61cf1
 export const getForumPosts = async (): Promise<ForumPost[]> => {
   try {
     const storedPosts = localStorage.getItem(FORUM_POSTS_STORAGE_KEY);
