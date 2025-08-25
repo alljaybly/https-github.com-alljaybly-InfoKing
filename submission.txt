@@ -1,0 +1,6 @@
+**InfoKing: Billion-Dollar Idea Goldmine**
+**Inspiration**: Inspired by the need to uncover real user problems from social platforms (X, Reddit, YouTube, TikTok), InfoKing uses AI to scrape and rank billion-user app ideas for health, productivity, and finance, empowering entrepreneurs.
+**Tech**: Built with React, Tailwind CSS, Supabase (Postgres, real-time), Gemini 2.5 Pro for scraping. Hosted on Netlify. Features gamified UI (confetti, progress bars), offline storage, privacy-first.
+**Lessons**: Overcame environment variable issues with Vite, simplified deployment with Netlify, learned AI’s power for market gap analysis.
+**Link**: [Netlify URL, e.g., infoking.netlify.app]
+**GitHub**: https://github.com/alljaybly/InfoKing
